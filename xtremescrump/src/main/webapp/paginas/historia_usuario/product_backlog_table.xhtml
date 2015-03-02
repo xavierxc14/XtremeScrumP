@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/resources/templates/general.xhtml">
+    <ui:define name="contenido">
+        <h:form id="formHistoriaUsuario">
+            <p:commandButton id="nuevo"
+                             value="#{msg['ec.edu.epn.software.historiaUsuario.nuevo']}"
+                             icon="ui-icon-document"
+                             action="#{historiaUsuarioControlador.nuevo}"
+                             update=":panelNuevaHistoriaUsuario"/>
+            <p:dataTable id="tablaHistoriasUsuario"
+                         value="#{historiaUsuarioControlador.historiaUsuarios}"
+                         var="historia"
+                         paginator="#{true}"
+                         emptyMessage="#{msg['ec.edu.epn.software.generico.datatable.vacia']}"
+                         rows="#{msg['ec.edu.epn.software.generico.maxRegistros']}"
+                         rowIndexVar="rowIndex"
+                         filterEvent="enter"
+                         sortBy="#{historia.prioridad}"
+                         style="overflow: auto">
+                <f:facet name="header">
+                    #{msg['ec.edu.epn.software.historiaUsuario.header']}
+                </f:facet>
+                <p:column style="width:16px">
+                    <p:rowToggler />
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.generico.numero']}"
+                          style="text-align: center; width: 30px">
+                    <h:outputText value="#{rowIndex+1}"/>
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.codigo']}"
+                          style="text-align: center; width: 100px">
+                    <h:outputText value="#{historia.codigo}"/>
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.titulo']}"
+                          style="width: 200px">
+                    <h:outputText value="#{historia.titulo}"/>
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.descripcion']}"
+                          style="width: 300px">
+                    <h:outputText value="#{historia.descripcion}"/>
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.prioridad']}"
+                          style="text-align: center; width: 50px" sortBy="#{historia.prioridad}">
+                    <h:outputText value="#{historia.prioridad}"/>
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.esfuerzo']}"
+                          style="text-align: center; width: 50px">
+                    <h:outputText value="#{historia.esfuerzo}"/>
+                </p:column>
+                <p:column headerText="#{msg['ec.edu.epn.software.generico.opciones']}"
+                          style="text-align: center; width: 100px">
+                    <p:commandButton id="botonAgregar" icon="ui-icon-plusthick"
+                                     ajax="#{false}"
+                                     action="#{historiaUsuarioControlador.nuevaTarea}"
+                                     title="#{msg['ec.edu.epn.software.tarea.agregar']}">
+                        <f:setPropertyActionListener value="#{historia}"
+                                                     target="#{historiaUsuarioControlador.historiaUsuario}"/>
+                    </p:commandButton>
+                    <p:commandButton id="botonEdicion" icon="ui-icon-pencil"
+                                     ajax="#{false}"
+                                     action="#{historiaUsuarioControlador.editar}"
+                                     title="#{msg['ec.edu.epn.software.generico.etiquetas.editar']}">
+                        <f:setPropertyActionListener value="#{historia}"
+                                                     target="#{historiaUsuarioControlador.historiaUsuario}"/>
+                    </p:commandButton>
+                    <p:commandButton id="botonEliminar" icon="ui-icon-trash"
+                                     onclick="PF('dlgElimHistoriaUsuario').show()"
+                                     title="#{msg['ec.edu.epn.software.generico.etiquetas.eliminar']}">
+                        <f:setPropertyActionListener value="#{historia}"
+                                                     target="#{historiaUsuarioControlador.historiaUsuario}"/>
+                    </p:commandButton>
+                </p:column>
+
+                <p:rowExpansion>
+                    <p:dataTable id="tablaTareas"
+                                 value="#{historia.tareas}"
+                                 var="tarea"
+                                 emptyMessage="#{msg['ec.edu.epn.software.generico.datatable.vacia']}"
+                                 rows="#{msg['ec.edu.epn.software.generico.maxRegistros']}"
+                                 rowIndexVar="rowIndex"
+                                 filterEvent="enter"
+                                 sortBy="#{tarea.prioridad}"
+                                 style="overflow: auto">
+                        <f:facet name="header">
+                            #{msg['ec.edu.epn.software.tarea.header']}
+                        </f:facet>
+                        <p:column headerText="#{msg['ec.edu.epn.software.generico.numero']}"
+                                  style="text-align: center; width: 0px">
+                            <h:outputText value="#{rowIndex+1}"/>
+                        </p:column>
+                        <!--<p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.titulo']}"
+                                  style="width: 200px">
+                            <h:outputText value="#{tarea.titulo}"/>
+                        </p:column>-->
+                        <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.descripcion']}"
+                                  style="width: 300px">
+                            <h:outputText value="#{tarea.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.prioridad']}"
+                                  style="text-align: center; width: 50px" sortBy="#{tarea.prioridad}">
+                            <h:outputText value="#{tarea.prioridad}"/>
+                        </p:column>
+                        <p:column headerText="#{msg['ec.edu.epn.software.historiaUsuario.esfuerzo']}"
+                                  style="text-align: center; width: 50px">
+                            <h:outputText value="#{tarea.esfuerzo}"/>
+                        </p:column>
+                        <p:column headerText="#{msg['ec.edu.epn.software.generico.opciones']}"
+                                  style="text-align: center; width: 50px">
+                            <!--<p:commandButton id="botonEdicion" icon="ui-icon-pencil"
+                                             ajax="#{false}"
+                                             action="#{historiaUsuarioControlador.editarTarea}"
+                                             title="#{msg['ec.edu.epn.software.generico.etiquetas.editar']}">
+                                <f:setPropertyActionListener value="#{tarea}"
+                                                             target="#{historiaUsuarioControlador.tarea}"/>
+                            </p:commandButton>-->
+                            <p:commandButton id="botonAgregar" icon="ui-icon-plusthick"
+                                             ajax="#{false}"
+                                             action="#{historiaUsuarioControlador.nuevoCriterio}"
+                                             title="#{msg['ec.edu.epn.software.criterio.agregar']}">
+                                <f:setPropertyActionListener value="#{tarea}"
+                                                             target="#{historiaUsuarioControlador.tarea}"/>
+                            </p:commandButton>
+                            <p:commandButton id="botonCriterios" icon="ui-icon-search"
+                                             ajax="#{false}"
+                                             action="#{historiaUsuarioControlador.buscarCriterios}"
+                                             title="#{msg['ec.edu.epn.software.criterio.mostrar']}"
+                                             update=":panelCriterios">
+                                <f:setPropertyActionListener value="#{tarea}"
+                                                             target="#{historiaUsuarioControlador.tarea}"/>
+                            </p:commandButton>
+                            <p:commandButton id="botonEliminar" icon="ui-icon-trash"
+                                             onclick="PF('dlgElimTarea').show()"
+                                             title="#{msg['ec.edu.epn.software.generico.etiquetas.eliminar']}">
+                                <f:setPropertyActionListener value="#{tarea}"
+                                                             target="#{historiaUsuarioControlador.tarea}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </p:rowExpansion>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="dialogos">
+        <p:dialog id="panelNuevaHistoriaUsuario"
+                  widgetVar="dlgHistoriaUsuario"
+                  header="#{msg['ec.edu.epn.software.historiaUsuario.nuevo']}"
+                  draggable="#{false}"
+                  modal="#{true}"
+                  resizable="#{false}">
+            <h:form id="formDialogoHistoriaUsuario">
+                <h:panelGrid columns="3">  
+                    <p:outputLabel for="codigo" value="#{msg['ec.edu.epn.software.historiaUsuario.codigo']}:"/>
+                    <p:inputText id="codigo" required="#{true}"
+                                 value="#{historiaUsuarioControlador.historiaUsuario.codigo}"/>
+                    <p:message for="codigo" showDetail="#{false}" display="icon"/>
+                    <p:outputLabel for="titulo" value="#{msg['ec.edu.epn.software.historiaUsuario.titulo']}:"/>
+                    <p:inputText id="titulo" required="#{true}"
+                                 value="#{historiaUsuarioControlador.historiaUsuario.titulo}"/>
+                    <p:message for="titulo" showDetail="#{false}" display="icon"/>
+                    <p:outputLabel for="descripcion" value="#{msg['ec.edu.epn.software.historiaUsuario.descripcion']}:"/>
+                    <p:inputTextarea id="descripcion"
+                                     value="#{historiaUsuarioControlador.historiaUsuario.descripcion}"
+                                     style="width: 250px; resize: none"
+                                     counter="contDescripcion" rows="5" cols="50"
+                                     autoResize="#{false}"
+                                     maxlength="#{msg['ec.edu.epn.software.generico.formato.maxCaracteres']}"
+                                     counterTemplate="#{msg['ec.edu.epn.software.generico.formato.caracteresRestantes']}"
+                                     required="#{true}"/>
+                    <p:message for="descripcion" showDetail="#{false}" display="icon"/>
+                    <h:outputText/>
+                    <h:outputText id="contDescripcion"/>
+                    <h:outputText/>
+                </h:panelGrid>
+                <h:panelGrid columns="7">
+                    <p:outputLabel for="prioridad" value="#{msg['ec.edu.epn.software.historiaUsuario.prioridad']}:"/>
+                    <pe:inputNumber id="prioridad" maxlength="3" required="#{true}"
+                                    decimalPlaces="0" style="width: 20px"
+                                    value="#{historiaUsuarioControlador.historiaUsuario.prioridad}"/>
+                    <p:message for="prioridad" showDetail="#{false}" display="icon"/>
+                    <p:spacer width="10" height="0"/>
+                    <p:outputLabel for="esfuerzo" value="#{msg['ec.edu.epn.software.historiaUsuario.esfuerzo']}:"/>
+                    <pe:inputNumber id="esfuerzo" maxlength="3" required="#{true}"
+                                    decimalPlaces="0" style="width: 20px"
+                                    value="#{historiaUsuarioControlador.historiaUsuario.esfuerzo}"/>
+                    <p:message for="esfuerzo" showDetail="#{false}" display="icon"/>
+                </h:panelGrid>
+                <p:separator/>
+                <center>
+                    <p:commandButton id="guardar"
+                                     value="#{msg['ec.edu.epn.software.generico.boton.guardar']}"
+                                     icon="ui-icon-disk"
+                                     action="#{historiaUsuarioControlador.guardar}"
+                                     update=":formHistoriaUsuario:tablaHistoriasUsuario"/>
+                    <p:commandButton id="cancelar"
+                                     value="#{msg['ec.edu.epn.software.generico.boton.cancelar']}"
+                                     icon="ui-icon-arrowreturnthick-1-w"
+                                     action="#{historiaUsuarioControlador.cerrarDialogo}"
+                                     process="@this"/>
+                </center>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="panelNuevaTarea"
+                  widgetVar="dlgTarea"
+                  header="Nueva Tarea"
+                  draggable="#{false}"
+                  modal="#{true}"
+                  resizable="#{false}">
+            <h:form id="formDialogoTarea">
+                <h:panelGrid columns="3">  
+                    <p:outputLabel for="tareaDesc" value="Descripción"/>
+                    <p:inputTextarea id="tareaDesc"
+                                     value="#{historiaUsuarioControlador.tarea.descripcion}"
+                                     style="width: 250px; resize: none"
+                                     counter="contDescripcionTarea" rows="5" cols="50"
+                                     autoResize="#{false}"
+                                     maxlength="#{msg['ec.edu.epn.software.generico.formato.maxCaracteres']}"
+                                     counterTemplate="#{msg['ec.edu.epn.software.generico.formato.caracteresRestantes']}"
+                                     required="#{true}"/>
+                    <p:message for="tareaDesc" showDetail="#{false}" display="icon"/>
+                    <h:outputText/>
+                    <h:outputText id="contDescripcionTarea"/>
+                    <h:outputText/>
+                </h:panelGrid>
+
+                <h:panelGrid columns="7">
+                    <p:outputLabel for="tareaPrioridad" value="Prioridad: "/>
+                    <pe:inputNumber id="tareaPrioridad" maxlength="3" required="#{true}"
+                                    decimalPlaces="0" style="width: 20px"
+                                    value="#{historiaUsuarioControlador.tarea.prioridad}"/>
+                    <p:message for="tareaPrioridad" showDetail="#{false}" display="icon"/>
+                    <p:spacer width="10" height="0"/>
+
+                    <p:outputLabel for="tareaEsfuerzo" value="Esfuerzo: "/>
+                    <pe:inputNumber id="tareaEsfuerzo" maxlength="3" required="#{true}"
+                                    decimalPlaces="0" style="width: 20px"
+                                    value="#{historiaUsuarioControlador.tarea.esfuerzo}"/>
+                    <p:message for="tareaEsfuerzo" showDetail="#{false}" display="icon"/>
+                </h:panelGrid>
+                <p:separator/>
+                <center>
+                    <p:commandButton id="guardar"
+                                     value="#{msg['ec.edu.epn.software.generico.boton.guardar']}"
+                                     icon="ui-icon-disk"
+                                     action="#{historiaUsuarioControlador.guardarTarea}"
+                                     update=":formHistoriaUsuario:tablaHistoriasUsuario"/>
+                    <p:commandButton id="cancelar"
+                                     value="#{msg['ec.edu.epn.software.generico.boton.cancelar']}"
+                                     icon="ui-icon-arrowreturnthick-1-w"
+                                     action="#{historiaUsuarioControlador.cerrarDialogo}"
+                                     process="@this"/>
+                </center>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="panelNuevoCriterio"
+                  widgetVar="dlgCriterio"
+                  header="Nuevp Criterio"
+                  draggable="#{false}"
+                  modal="#{true}"
+                  resizable="#{false}">
+            <h:form id="formDialogoCriterio">
+                <h:panelGrid columns="3">  
+                    <p:outputLabel for="criterioDescripcion" value="Descripción"/>
+                    <p:inputTextarea id="criterioDescripcion"
+                                     value="#{historiaUsuarioControlador.criterio.descripcion}"
+                                     style="width: 250px; resize: none"
+                                     counter="contDescripcionCriterio" rows="5" cols="50"
+                                     autoResize="#{false}"
+                                     maxlength="#{msg['ec.edu.epn.software.generico.formato.maxCaracteres']}"
+                                     counterTemplate="#{msg['ec.edu.epn.software.generico.formato.caracteresRestantes']}"
+                                     required="#{true}"
+                                     disabled="#{historiaUsuarioControlador.criterio.id!=null}"/>
+                    <p:message for="criterioDescripcion" showDetail="#{false}" display="icon"/>
+                    <h:outputText/>
+                    <h:outputText id="contDescripcionCriterio"/>
+                    <h:outputText/>
+                    <p:outputLabel for="criterioDescripcion" value="Descripción"/>
+                    <p:selectBooleanCheckbox value="#{historiaUsuarioControlador.criterio.cumple}"/>
+                </h:panelGrid>
+                <p:separator/>
+                <center>
+                    <p:commandButton id="guardar"
+                                     value="#{msg['ec.edu.epn.software.generico.boton.guardar']}"
+                                     icon="ui-icon-disk"
+                                     action="#{historiaUsuarioControlador.guardarCriterio}"
+                                     update=":formHistoriaUsuario:tablaHistoriasUsuario"/>
+                    <p:commandButton id="cancelar"
+                                     value="#{msg['ec.edu.epn.software.generico.boton.cancelar']}"
+                                     icon="ui-icon-arrowreturnthick-1-w"
+                                     action="#{historiaUsuarioControlador.cerrarDialogo}"
+                                     process="@this"/>
+                </center>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="panelCriterios"
+                  widgetVar="dlgCriterios"
+                  header="Criterios de Aceptación"
+                  draggable="#{false}"
+                  modal="#{true}"
+                  resizable="#{false}">
+            <h:form id="formDialogoCriterios">
+                <p:dataTable id="tablaCriterios"
+                             value="#{historiaUsuarioControlador.criterios}"
+                             var="criterio"
+                             emptyMessage="#{msg['ec.edu.epn.software.generico.datatable.vacia']}"
+                             rows="#{msg['ec.edu.epn.software.generico.maxRegistros']}"
+                             rowIndexVar="rowIndex"
+                             style="width: 600px">
+                    <p:column headerText="Descripción"
+                              style="text-align: center; width: 200px">
+                        <h:outputText value="#{criterio.descripcion}"/>
+                    </p:column>
+                    <p:column headerText="Cumple"
+                              style="text-align: center; width: 50px">
+                        <p:selectBooleanCheckbox value="#{criterio.cumple}" disabled="#{true}"/>
+                    </p:column>
+                    <p:column headerText="#{msg['ec.edu.epn.software.generico.opciones']}"
+                              style="text-align: center; width: 50px">
+                        <p:commandButton id="botonEdicion" icon="ui-icon-pencil"
+                                         ajax="#{false}"
+                                         action="#{historiaUsuarioControlador.editarCriterio}"
+                                         title="#{msg['ec.edu.epn.software.generico.etiquetas.editar']}">
+                            <f:setPropertyActionListener value="#{criterio}"
+                                                         target="#{historiaUsuarioControlador.criterio}"/>
+                        </p:commandButton>
+                        <p:commandButton id="botonEliminar" icon="ui-icon-trash"
+                                         onclick="PF('dlgElimCriterio').show()"
+                                         title="#{msg['ec.edu.epn.software.generico.etiquetas.eliminar']}">
+                            <f:setPropertyActionListener value="#{criterio}"
+                                                         target="#{historiaUsuarioControlador.criterio}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog id="dlgEliminarHistoriaUsuario"
+                         header="#{msg['ec.edu.epn.software.generico.etiquetas.eliminacion']}"
+                         message="#{msg['ec.edu.epn.software.historiaUsuario.eliminacion']}"
+                         severity="alert"
+                         widgetVar="dlgElimHistoriaUsuario">
+            <div style="text-align: center">
+                <p:commandButton id="confirm"
+                                 value="#{msg['ec.edu.epn.software.generico.boton.si']}"
+                                 update=":formHistoriaUsuario:tablaHistoriasUsuario"
+                                 action="#{historiaUsuarioControlador.borrar}"
+                                 style="margin: auto"/>
+                <p:commandButton id="decline"
+                                 value="#{msg['ec.edu.epn.software.generico.boton.no']}"
+                                 onclick="PF('dlgElimHistoriaUsuario').hide()"
+                                 process="@this"
+                                 style="margin: auto"/>
+            </div>
+        </p:confirmDialog>
+
+        <p:confirmDialog id="dlgEliminarTarea"
+                         header="#{msg['ec.edu.epn.software.generico.etiquetas.eliminacion']}"
+                         message="#{msg['ec.edu.epn.software.tarea.eliminacion']}"
+                         severity="alert"
+                         widgetVar="dlgElimTarea">
+            <div style="text-align: center">
+                <p:commandButton id="confirm1"
+                                 value="#{msg['ec.edu.epn.software.generico.boton.si']}"
+                                 update=":formHistoriaUsuario:tablaHistoriasUsuario"
+                                 action="#{historiaUsuarioControlador.borrarTarea}"
+                                 style="margin: auto"/>
+                <p:commandButton id="decline1"
+                                 value="#{msg['ec.edu.epn.software.generico.boton.no']}"
+                                 onclick="PF('dlgElimTarea').hide()"
+                                 process="@this"
+                                 style="margin: auto"/>
+            </div>
+        </p:confirmDialog>
+
+        <p:confirmDialog id="dlgEliminarCriterio"
+                         header="#{msg['ec.edu.epn.software.generico.etiquetas.eliminacion']}"
+                         message="#{msg['ec.edu.epn.software.tarea.eliminacion']}"
+                         severity="alert"
+                         widgetVar="dlgElimCriterio">
+            <div style="text-align: center">
+                <p:commandButton id="confirm2"
+                                 value="#{msg['ec.edu.epn.software.generico.boton.si']}"
+                                 update=":formHistoriaUsuario:tablaHistoriasUsuario"
+                                 action="#{historiaUsuarioControlador.borrarTarea}"
+                                 style="margin: auto"/>
+                <p:commandButton id="decline2"
+                                 value="#{msg['ec.edu.epn.software.generico.boton.no']}"
+                                 onclick="PF('dlgElimCriterio').hide()"
+                                 process="@this"
+                                 style="margin: auto"/>
+            </div>
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

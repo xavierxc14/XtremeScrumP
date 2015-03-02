@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                template="/resources/templates/general.xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:define name="contenido">
+        <h:form id="formSprint">
+            <p:fieldset id="historiasAsignadas" legend="#{msg['ec.edu.epn.software.releasePlanning.sprints']}">
+                <p:dataGrid id="historiasUsadas" columns="3"
+                            value="#{releasePlanningControlador.sprintHUs}"
+                            emptyMessage="#{msg['ec.edu.epn.software.generico.datatable.vacia']}"
+                            var="sprintHU">
+                    <ui:repeat id="repeatSprints" value="#{sprintHU}" var="shu">
+                        <p:fieldset id="sprint" legend="#{shu.sprint.nombre}">
+                            <p:dataGrid id="historiasLibres" var="historia"
+                                        value="#{shu.historiaUsuarios}" columns="1"
+                                        emptyMessage="#{msg['ec.edu.epn.software.generico.datatable.vacia']}">
+                                <p:panel id="pnlDisponibles" header="#{historia.codigo}" style="text-align:center">
+                                    <h:panelGrid columns="1" style="width:100%">
+                                        #{historia.titulo}
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:dataGrid>
+                        </p:fieldset>
+                    </ui:repeat>
+                </p:dataGrid>
+            </p:fieldset>
+            <br/>
+            <p:separator/>
+            <br/>
+            <p:fieldset id="historiasDisponibles" legend="#{msg['ec.edu.epn.software.releasePlanning.historiasDisponibles']}">
+                <p:dataGrid id="historiasLibres" columns="3"
+                            value="#{releasePlanningControlador.historiaUsuarios}"
+                            emptyMessage="#{msg['ec.edu.epn.software.generico.datatable.vacia']}"
+                            var="historia">
+                    <p:panel id="pnlDisponibles" header="#{historia.codigo}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            #{historia.titulo}
+                        </h:panelGrid>
+                    </p:panel>
+                </p:dataGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
