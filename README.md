@@ -17,5 +17,9 @@ This is an opensource project and use a handful of technologies like:
 * To deploy it on Google's App Engine, edit the appengine.app.appId on the project pom's to the app id of you project, then use the maven goal mvn appengine:update.
 * Also refer to [Google's App Engine Java Tutorial](https://cloud.google.com/appengine/docs/java/gettingstarted/introduction).
 
+## Authors
+* Carolina López
+* Xavier Ñauñay
+
 ## Help
 For help contact me.
